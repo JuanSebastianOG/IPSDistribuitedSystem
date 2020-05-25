@@ -8,5 +8,6 @@ import Class.Patient;
 public interface InterfaceINS extends Remote {
 
 	public int evPatient(Patient p) throws RemoteException;
+	
 
 }

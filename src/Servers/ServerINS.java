@@ -22,7 +22,7 @@ public class ServerINS {
 
 		Registry registry = LocateRegistry.createRegistry(5554);
 		Inet4Address host = (Inet4Address) Inet4Address.getLocalHost();
-		String[] arg= {host.getHostAddress(),"Colsanitas"};
+		String[] arg= {"Colsaluds",host.getHostAddress()};
 		INS ins = new INS(arg);
 		
 		InterfaceINS remInvoINS = (InterfaceINS) UnicastRemoteObject.exportObject((Remote) ins, 0);

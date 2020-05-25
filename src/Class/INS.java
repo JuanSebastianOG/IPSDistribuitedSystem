@@ -12,7 +12,7 @@ public class INS implements InterfaceINS {
 
 
 	 public INS(String[] args) throws RemoteException, NotBoundException {
-	        Registry registry = LocateRegistry.getRegistry(args[0], 5555);
+	        Registry registry = LocateRegistry.getRegistry(args[1], 5555);
 	        InterfaceIPS ipsNueva = (InterfaceIPS) registry.lookup("ips");
 	        ipsNueva.createINS(args[1]);
 	    }
@@ -24,6 +24,27 @@ public class INS implements InterfaceINS {
 	@Override
 	public int evPatient(Patient p) throws RemoteException {
 		// TODO Auto-generated method stub
-		return 0;
+
+		int peso = 0;
+		
+		if((p.isFiebre() && p.isTos() && p.isCansancio() && p.isDolor()) && (p.isFaltaAire() || p.isInsuficienciaPulmonar()
+				|| p.isShockSeptico() || p.isFallaOrganica())) {
+			peso += 60;
+		}
+		if(p.isOtrasTatologias()) {
+			peso += 10;
+		}
+		if(p.isCirugias()) {
+			peso += 10;
+		}
+		if(p.getAge() > 70) {
+			peso += 20;
+		} else {
+			peso += 10;
+		}
+		
+		return peso;
 	}
+	
+	
 }
