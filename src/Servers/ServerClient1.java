@@ -40,7 +40,8 @@ public class ServerClient1 {
 					Boolean.parseBoolean(sep[7]),Boolean.parseBoolean(sep[8]),
 					Boolean.parseBoolean(sep[9]),Boolean.parseBoolean(sep[10]),
 					Boolean.parseBoolean(sep[11]),Boolean.parseBoolean(sep[12])
-					,Boolean.parseBoolean(sep[13]),Boolean.parseBoolean(sep[10]));
+					,Boolean.parseBoolean(sep[13]),Boolean.parseBoolean(sep[14])
+					,sep[15]);
 			cont++;
 			lp.add(nuevo);
 			line = br.readLine();
@@ -49,7 +50,6 @@ public class ServerClient1 {
 	
 
 		Registry registryIPS = LocateRegistry.getRegistry("192.168.1.59",5555);
-
         InterfaceIPS ipsNew = (InterfaceIPS) registryIPS.lookup("ips");
         
         
@@ -58,6 +58,8 @@ public class ServerClient1 {
 			
 			ipsNew.assignAppointment(p);
 		}
+		System.out.println("ME SINCRO : "+ipsNew.getCount());
+	
 		
 		Registry registry = LocateRegistry.createRegistry(5552);
 		Client1 client1 = new Client1();

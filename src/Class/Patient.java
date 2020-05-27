@@ -10,7 +10,8 @@ public class Patient implements Serializable{
 	String eps;
 	String ip; 
 	int prioridad;
-	
+	String plan;
+
 	public int getPrioridad() {
 		return prioridad;
 	}
@@ -161,7 +162,7 @@ public class Patient implements Serializable{
 	
 	public Patient(String name, int document, int age, String eps, String ip, boolean fiebre, boolean tos,
 			boolean cansancio, boolean dolor, boolean faltaAire, boolean insuficienciaPulmonar, boolean shockSeptico,
-			boolean fallaOrganica, boolean otrasTatologias, boolean cirugias) {
+			boolean fallaOrganica, boolean otrasTatologias, boolean cirugias,String plan) {
 		super();
 		this.name = name;
 		this.document = document;
@@ -178,6 +179,15 @@ public class Patient implements Serializable{
 		this.fallaOrganica = fallaOrganica;
 		this.otrasTatologias = otrasTatologias;
 		this.cirugias = cirugias;
+		this.plan=plan;
+	}
+
+	public String getPlan() {
+		return plan;
+	}
+
+	public void setPlan(String plan) {
+		this.plan = plan;
 	}
 	
 	

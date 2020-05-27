@@ -24,7 +24,6 @@ public class ServerINS {
 		Inet4Address host = (Inet4Address) Inet4Address.getLocalHost();
 		String[] arg= {"Colsaluds",host.getHostAddress()};
 		INS ins = new INS(arg);
-		
 		InterfaceINS remInvoINS = (InterfaceINS) UnicastRemoteObject.exportObject((Remote) ins, 0);
 		registry.bind("ins", (Remote) remInvoINS);
 		

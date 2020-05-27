@@ -4,18 +4,26 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.ArrayList;
 
 import Interfaces.InterfaceINS;
 import Interfaces.InterfaceIPS;
 
 public class INS implements InterfaceINS {
 
+	ArrayList<Patient> cases = new ArrayList<Patient>();
+	
+	public void addCase(Patient p) throws RemoteException, NotBoundException {
+		cases.add(p);
+		System.out.println("Meti como urgente "+p.getName());
+	}
 
 	 public INS(String[] args) throws RemoteException, NotBoundException {
 	        Registry registry = LocateRegistry.getRegistry(args[1], 5555);
 	        InterfaceIPS ipsNueva = (InterfaceIPS) registry.lookup("ips");
 	        ipsNueva.createINS(args[1]);
 	    }
+	 
 
 	public INS() {
 		// TODO Auto-generated constructor stub

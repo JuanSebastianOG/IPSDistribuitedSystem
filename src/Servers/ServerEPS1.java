@@ -21,7 +21,8 @@ public class ServerEPS1 {
 		// TODO Auto-generated method stub
 		Registry registry = LocateRegistry.createRegistry(5548);
 		Inet4Address host = (Inet4Address) Inet4Address.getLocalHost();
-		String[] arg= {"Colsanitas",host.getHostAddress(),host.getHostAddress(),"5548"};
+		
+		String[] arg= {"Colsanitas",host.getHostAddress(),host.getHostAddress(),"5548","A","B",""};
 
 		EPS1 eps1 = new EPS1(arg);
 		InterfaceEPS1 remInvoEPS = (InterfaceEPS1) UnicastRemoteObject.exportObject( eps1, 0);
