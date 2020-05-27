@@ -29,7 +29,7 @@ public class ServerClient1 {
 		// TODO Auto-generated method stub
 		
 		//Lee los pacientes
-		BufferedReader br = new BufferedReader(new FileReader(new File("./pacientes.txt")));
+		BufferedReader br = new BufferedReader(new FileReader(new File("./pacientes2.txt")));
 		String line = br.readLine();
 		ArrayList<Patient> lp= new ArrayList<Patient>();
 		int cont=0;
@@ -52,10 +52,9 @@ public class ServerClient1 {
 
 		Registry registryIPS = LocateRegistry.getRegistry("192.168.1.59",5555);
         InterfaceIPS ipsNew = (InterfaceIPS) registryIPS.lookup("ips");
-        int portSC=5550;
+        int portSC=5551;
         
 		for(Patient p:lp) {
-			System.out.println(p);
 			p.setPortSC(portSC);
 			ipsNew.assignAppointment(p);
 		}

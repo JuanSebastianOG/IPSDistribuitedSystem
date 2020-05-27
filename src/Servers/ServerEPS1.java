@@ -19,16 +19,16 @@ public class ServerEPS1 {
 
 	public static void main(String[] args) throws RemoteException, AlreadyBoundException, UnknownHostException, NotBoundException {
 		// TODO Auto-generated method stub
-		Registry registry = LocateRegistry.createRegistry(5549);
+		Registry registry = LocateRegistry.createRegistry(5548);
 		Inet4Address host = (Inet4Address) Inet4Address.getLocalHost();
 		
-		String[] arg= {"Colsanitas",host.getHostAddress(),host.getHostAddress(),"5549","A","B","C"};
+		String[] arg= {"Saludsita",host.getHostAddress(),host.getHostAddress(),"5548","A","B","C"};
 
 		EPS1 eps1 = new EPS1(arg);
 		InterfaceEPS1 remInvoEPS = (InterfaceEPS1) UnicastRemoteObject.exportObject(eps1, 0);
 		registry.bind("eps1", (Remote) remInvoEPS);
 		
-		System.out.println("Registry EPS1 comenzó...");
+		System.out.println("Registry EPS1 comenzó... EPS: "+arg[0]);
 	}
 
 }

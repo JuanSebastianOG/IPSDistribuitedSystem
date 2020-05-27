@@ -73,7 +73,6 @@ public class EPS1 implements InterfaceEPS1, Serializable {
 	public void addPatient(Patient p) {
 		// TODO Auto-generated method stub
 		usuarios.put(p.getDocument(), p);
-		System.out.println("Meti al paciente: " + usuarios.get(p.getDocument()));
 	}
 
 	@Override
@@ -90,7 +89,6 @@ public class EPS1 implements InterfaceEPS1, Serializable {
 	@Override
 	public boolean setAppointment(Patient p) throws RemoteException {
 		// TODO Auto-generated method stub
-		System.out.println("ESTOY LLEGANDO POR NORMAL "+ this.getName() + " y metere "+ p.getName());
 
 		synchronized (this) {
 
@@ -110,42 +108,110 @@ public class EPS1 implements InterfaceEPS1, Serializable {
 				}
 				System.out.println();
 				System.out.println();
-
 			}
+			System.out.println();
+            System.out.println("------------------------------------------------------------------------");
+			System.out.println();
 			return true;
 		}
-		
-		
 		
 	}
 
 	@Override
 	public Patient setUrgAppointment(Patient p) throws RemoteException {
 		// TODO Auto-generated method stub
-		System.out.println("ESTOY LLEGANDO POR URGENTE "+ this.getName() + " y metere "+ p.getName());
-
 		synchronized (this) {
-			Patient forChange = matAppointments[contRow][0];
-			matAppointments[contRow][contCol] = forChange;
-			contCol++;
-			if (contCol == 7) {
-				contCol = 0;
-				contRow++;
-			}
-			matAppointments[contRow][0] = p;
-			for(int i=0;i<4;i++) {
-				for(int j=0;j<7;j++) {
-					if(matAppointments[i][j]!=null) {
-						System.out.print(matAppointments[i][j].getName()+"\t");
-					}else {
-						System.out.print(" 0 \t ");
+			if(matAppointments[0][0] == null) {
+				  matAppointments[contRow][contCol] = p;
+		            contCol++;
+		            if (contCol == 7) {
+		                contCol = 0;
+		                contRow++;
+		            }
+		            for(int i=0;i<4;i++) {
+						for(int j=0;j<7;j++) {
+							if(matAppointments[i][j]!=null) {
+								System.out.print(matAppointments[i][j].getName()+"\t");
+							}else {
+								System.out.print(" 0 \t ");
+							}
+						}
+						System.out.println();
+						System.out.println();
 					}
-				}
-				System.out.println();
-				System.out.println();
+		            System.out.println();
+		            System.out.println("------------------------------------------------------------------------");
+					System.out.println();
+		            return null;
+			}else {
+				Patient forChange = null;
+				int auxRow=0,auxCol=0;
+				boolean breaki=true;
+				for(int i=0;i<4;i++) {
+	                for(int j=0;j<7;j++) {
+	                    if(matAppointments[i][j]!=null) {
 
+	                        if(matAppointments[i][j].getPrioridad() < 90&&breaki) {
+	                            forChange = matAppointments[i][j];
+	                            auxCol = j;
+	                            auxRow = i;
+	                            breaki=false;
+	                        }
+	                    }
+	                }
+	            }
+	            if(breaki==false) {
+	            	matAppointments[auxRow][auxCol] = p;
+		            matAppointments[contRow][contCol] = forChange;
+		            contCol++;
+		            if (contCol == 7) {
+		                contCol = 0;
+		                contRow++;
+		            }
+		        	for(int i=0;i<4;i++) {
+						for(int j=0;j<7;j++) {
+							if(matAppointments[i][j]!=null) {
+								System.out.print(matAppointments[i][j].getName()+"\t");
+							}else {
+								System.out.print(" 0 \t ");
+							}
+						}
+						System.out.println();
+						System.out.println();
+					}
+		        	System.out.println();
+		            System.out.println("------------------------------------------------------------------------");
+					System.out.println();
+	            }else {
+	            	  matAppointments[contRow][contCol] = p;
+			            contCol++;
+			            if (contCol == 7) {
+			                contCol = 0;
+			                contRow++;
+			            }
+			            for(int i=0;i<4;i++) {
+							for(int j=0;j<7;j++) {
+								if(matAppointments[i][j]!=null) {
+									System.out.print(matAppointments[i][j].getName()+"\t");
+								}else {
+									System.out.print(" 0 \t ");
+								}
+							}
+							System.out.println();
+							System.out.println();
+
+						}
+			            System.out.println();
+			            System.out.println("------------------------------------------------------------------------");
+						System.out.println();
+			            return null;
+	            }
+	            
+				return forChange;
 			}
-			return forChange;
+			
+			
+		
 		}
 
 	}

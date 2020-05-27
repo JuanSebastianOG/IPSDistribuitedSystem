@@ -57,15 +57,10 @@ public class IPS implements InterfaceIPS {
 
 						if (remINS.evPatient(p) < 70) {
 							System.out.println("El paciente " + p.getName() + " no cumple puntos necesarios");
-
 						} else {
-							if (remINS.evPatient(p) > 90) {
+							if (remINS.evPatient(p) >= 90) {
 								valIPSUrg = true;
 								valIPS = true;
-								System.out.println(
-										"El paciente " + p.getName() + " esta grave > 90 cita al dia siguiente");
-								System.out.println("Si no hay se reprograma a la del paciente con menor prioridad ");
-
 								if (remEPS.haveCovert(p)) {
 									valEPS = true;
 								}
@@ -73,7 +68,6 @@ public class IPS implements InterfaceIPS {
 								// ABORT
 							} else {
 								valIPS = true;
-								System.out.println("El paciente " + p.getName() + " cita normal");
 								if (remEPS.haveCovert(p)) {
 									valEPS = true;
 								}
@@ -87,11 +81,12 @@ public class IPS implements InterfaceIPS {
 								System.out.println("COMMIT CITA URGENTE");
 								Patient pMove = remEPS.setUrgAppointment(p);
 								remINS.addCase(p);
-
 								Registry registryPat = LocateRegistry.getRegistry(p.getIp(), p.getPortSC());
 								InterfaceClient1 remPat = (InterfaceClient1) registryPat.lookup("client1");
 
-								remPat.reciveNot(pMove, 1);
+								if(pMove!=null){
+									remPat.reciveNot(pMove, 1);
+								}
 								remPat.reciveNot(p, 2);
 
 								// Enviar mensaje de cambio de cita
@@ -143,7 +138,6 @@ public class IPS implements InterfaceIPS {
 
 		// falta añadir a lista de eps
 		this.epss.put(eps.getName(), eps);
-		System.out.println("->" + eps.getIpEPS() + "->" + eps.getName());
 		return true;
 	}
 
