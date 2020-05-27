@@ -11,6 +11,15 @@ public class Patient implements Serializable{
 	String ip; 
 	int prioridad;
 	String plan;
+	int portSC;
+
+	public int getPortSC() {
+		return portSC;
+	}
+
+	public void setPortSC(int portSC) {
+		this.portSC = portSC;
+	}
 
 	public int getPrioridad() {
 		return prioridad;

@@ -80,11 +80,7 @@ public class EPS1 implements InterfaceEPS1, Serializable {
 	public boolean haveCovert(Patient p) throws RemoteException {
 		// TODO Auto-generated method stub
 		for (String s : priorityD) {
-			System.out.println(s + " ---- " + p.getPlan());
-
 			if (p.getPlan().equals(s)) {
-				System.out.println("ENTREEEE");
-
 				return true;
 			}
 		}
@@ -94,6 +90,8 @@ public class EPS1 implements InterfaceEPS1, Serializable {
 	@Override
 	public boolean setAppointment(Patient p) throws RemoteException {
 		// TODO Auto-generated method stub
+		System.out.println("ESTOY LLEGANDO POR NORMAL "+ this.getName() + " y metere "+ p.getName());
+
 		synchronized (this) {
 
 			matAppointments[contRow][contCol] = p;
@@ -124,6 +122,8 @@ public class EPS1 implements InterfaceEPS1, Serializable {
 	@Override
 	public Patient setUrgAppointment(Patient p) throws RemoteException {
 		// TODO Auto-generated method stub
+		System.out.println("ESTOY LLEGANDO POR URGENTE "+ this.getName() + " y metere "+ p.getName());
+
 		synchronized (this) {
 			Patient forChange = matAppointments[contRow][0];
 			matAppointments[contRow][contCol] = forChange;
@@ -133,6 +133,18 @@ public class EPS1 implements InterfaceEPS1, Serializable {
 				contRow++;
 			}
 			matAppointments[contRow][0] = p;
+			for(int i=0;i<4;i++) {
+				for(int j=0;j<7;j++) {
+					if(matAppointments[i][j]!=null) {
+						System.out.print(matAppointments[i][j].getName()+"\t");
+					}else {
+						System.out.print(" 0 \t ");
+					}
+				}
+				System.out.println();
+				System.out.println();
+
+			}
 			return forChange;
 		}
 

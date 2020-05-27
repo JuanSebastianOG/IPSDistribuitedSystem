@@ -14,13 +14,12 @@ import Interfaces.InterfaceEPS1;
 import Interfaces.InterfaceINS;
 import Interfaces.InterfaceIPS;
 
-public class IPS implements InterfaceIPS  {
+public class IPS implements InterfaceIPS {
 
 	String myINSIP;
 	HashMap<String, EPS1> epss = new HashMap<String, EPS1>();
-	public int count=0;
+	public int count = 0;
 
-	
 	public int getCount() {
 		return count;
 	}
@@ -32,81 +31,90 @@ public class IPS implements InterfaceIPS  {
 	@Override
 	public void assignAppointment(Patient p) throws RemoteException, NotBoundException {
 		// TODO Auto-generated method stub
-		
+
 		Thread assign = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				
-				boolean valIPS=false;
-				boolean valEPS=false;
-				boolean valIPSUrg=false;
+
+				boolean valIPS = false;
+				boolean valEPS = false;
+				boolean valIPSUrg = false;
 
 				EPS1 eps1 = epss.get(p.getEps());
 
 				Registry registry;
 				try {
 					registry = LocateRegistry.getRegistry(myINSIP, 5554);
-				
-				InterfaceINS remINS = (InterfaceINS) registry.lookup("ins");
+					InterfaceINS remINS = (InterfaceINS) registry.lookup("ins");
 
-				if (eps1 != null) {
-					Registry registrys = LocateRegistry.getRegistry(eps1.getIpEPS(), eps1.getPort());
-					InterfaceEPS1 remEPS = (InterfaceEPS1) registrys.lookup("eps1");
+					if (eps1 != null) {
+						Registry registrys = LocateRegistry.getRegistry(eps1.getIpEPS(), eps1.getPort());
+						InterfaceEPS1 remEPS = (InterfaceEPS1) registrys.lookup("eps1");
 
-					Registry registrysP = LocateRegistry.getRegistry(p.getIp(), 5552);
-					// InterfaceClient1 remP = (InterfaceClient1) registrysP.lookup("client1");
+						remEPS.addPatient(p);
+						p.setPrioridad(remINS.evPatient(p));
 
-					remEPS.addPatient(p);
-					p.setPrioridad(remINS.evPatient(p));
-					
-					if (remINS.evPatient(p) < 70) {
-						System.out.println("El paciente " + p.getName() + " no cumple puntos necesarios");
-				
-					} else {
-						if (remINS.evPatient(p) > 90) {
-							valIPSUrg=true;
-							valIPS=true;
-							System.out.println("El paciente " + p.getName() + " esta grave > 90 cita al dia siguiente");
-							System.out.println("Si no hay se reprograma a la del paciente con menor prioridad ");
-							
-							if(remEPS.haveCovert(p)) {
-								valEPS=true;
-							}
-							//else
-							//ABORT
+						if (remINS.evPatient(p) < 70) {
+							System.out.println("El paciente " + p.getName() + " no cumple puntos necesarios");
+
 						} else {
-							valIPS=true;
-							System.out.println("El paciente " + p.getName() + " cita normal");
-							if(remEPS.haveCovert(p)) {
-								valEPS=true;
+							if (remINS.evPatient(p) > 90) {
+								valIPSUrg = true;
+								valIPS = true;
+								System.out.println(
+										"El paciente " + p.getName() + " esta grave > 90 cita al dia siguiente");
+								System.out.println("Si no hay se reprograma a la del paciente con menor prioridad ");
+
+								if (remEPS.haveCovert(p)) {
+									valEPS = true;
+								}
+								// else
+								// ABORT
+							} else {
+								valIPS = true;
+								System.out.println("El paciente " + p.getName() + " cita normal");
+								if (remEPS.haveCovert(p)) {
+									valEPS = true;
+								}
+
 							}
-							
 						}
-					}
-					
-					if(valIPS&&valEPS) {
-						//Commit con synccro
-						if(valIPSUrg) {
-							Patient pMove= remEPS.setUrgAppointment(p);
-							remINS.addCase(p);
-							//Enviar mensaje de cambio de cita
-						}else {
-							remEPS.setAppointment(p);
+
+						if (valIPS && valEPS) {
+							// Commit con synccro
+							if (valIPSUrg) {
+								System.out.println("COMMIT CITA URGENTE");
+								Patient pMove = remEPS.setUrgAppointment(p);
+								remINS.addCase(p);
+
+								Registry registryPat = LocateRegistry.getRegistry(p.getIp(), p.getPortSC());
+								InterfaceClient1 remPat = (InterfaceClient1) registryPat.lookup("client1");
+
+								remPat.reciveNot(pMove, 1);
+								remPat.reciveNot(p, 2);
+
+								// Enviar mensaje de cambio de cita
+							} else {
+								System.out.println("COMMIT CITA NORMAL");
+								Registry registryPat = LocateRegistry.getRegistry(p.getIp(), p.getPortSC());
+								InterfaceClient1 remPat = (InterfaceClient1) registryPat.lookup("client1");
+								remPat.reciveNot(p, 2);
+								remEPS.setAppointment(p);
+							}
+							// Enviar mensaje a p de que se pudo agendar la cita
+						} else {
+							// aborts
+							Registry registryPat = LocateRegistry.getRegistry(p.getIp(), p.getPortSC());
+							InterfaceClient1 remPat = (InterfaceClient1) registryPat.lookup("client1");
+							remPat.reciveNot(p, 3);
+							System.out.println("ABORT");
 						}
-						System.out.println("voy a comitear");
-						//Enviar mensaje a p de que se pudo agendar la cita
-					}else {
-						//aborts
+
+					} else {
+						System.out.println("El paciente " + p.getName() + " no tiene eps asociada");
 						System.out.println("ABORT");
 					}
-
-				} else {
-					System.out.println("El paciente " + p.getName() + " no tiene eps asociada");
-					System.out.println("ABORT");
-				}
-				
-				
 
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
@@ -115,14 +123,12 @@ public class IPS implements InterfaceIPS  {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-				
+
 			}
-			
+
 		});
 		assign.start();
-	
-	
+
 	}
 
 	@Override
