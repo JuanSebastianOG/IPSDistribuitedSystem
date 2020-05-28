@@ -50,7 +50,7 @@ public class ServerClient1 {
 		br.close();
 	
 
-		Registry registryIPS = LocateRegistry.getRegistry("192.168.1.59",5555);
+		Registry registryIPS = LocateRegistry.getRegistry("192.168.56.1",5555);
         InterfaceIPS ipsNew = (InterfaceIPS) registryIPS.lookup("ips");
         int portSC=5551;
         
@@ -62,7 +62,7 @@ public class ServerClient1 {
 		
 		Registry registry = LocateRegistry.createRegistry(portSC);
 		Inet4Address host = (Inet4Address) Inet4Address.getLocalHost();
-		Client1 client1 = new Client1(5551,host.getHostAddress());
+		Client1 client1 = new Client1(portSC,host.getHostAddress());
 		InterfaceClient1 remInvoClient1 = (InterfaceClient1) UnicastRemoteObject.exportObject(client1, 0);
 		registry.bind("client1",  remInvoClient1);
 		

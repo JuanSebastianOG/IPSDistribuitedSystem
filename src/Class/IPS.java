@@ -83,9 +83,14 @@ public class IPS implements InterfaceIPS {
 								remINS.addCase(p);
 								Registry registryPat = LocateRegistry.getRegistry(p.getIp(), p.getPortSC());
 								InterfaceClient1 remPat = (InterfaceClient1) registryPat.lookup("client1");
-
+							
+						
+								
 								if(pMove!=null){
-									remPat.reciveNot(pMove, 1);
+									Registry registryPatM = LocateRegistry.getRegistry(pMove.getIp(), pMove.getPortSC());
+									InterfaceClient1 remPatM = (InterfaceClient1) registryPatM.lookup("client1");
+									
+									remPatM.reciveNot(pMove, 1);
 								}
 								remPat.reciveNot(p, 2);
 
